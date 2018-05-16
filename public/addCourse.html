@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js" integrity="sha384-uefMccjFJAIv6A+rW+L4AHf99KvxDjWSu1z9VI8SKNVmz4sk7buKt/6v9KI65qnm"
+        crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css" integrity="sha384-9gVQ4dYFwwWSjIDZnLEWnxCjeSWFphJiwGPXr1jddIhOegiu1FwO5qRGvFXOdJZ4"
+        crossorigin="anonymous">
+    <style>
+            ul {
+                list-style-type: none;
+                margin: 0;
+                padding: 0;
+                overflow: hidden;
+                background-color: #333;
+            }
+    
+            li {
+                float: left;
+            }
+    
+            li a {
+                display: block;
+                color: white;
+                text-align: center;
+                padding: 14px 16px;
+                text-decoration: none;
+            }
+    
+            li a:hover:not(.active) {
+                background-color: #111;
+            }
+    
+            .active {
+                background-color: #4CAF50;
+            }
+            .center {
+        display: block;
+        margin-left: auto;
+        margin-right: auto;
+        width: 50%;
+        height:30%;
+    }
+        </style>
+</head>
+
+<body>
+   <img src="main.jpg" alt="Paris" class="center">
+    <ul>
+            <!-- class="active"
+                    <li><a  href="">Home</a></li> -->
+            <li>
+                <a href="showCourse.html">See All courses</a>
+            </li>
+            <li>
+                <a href="addCourse.html">Add new Course</a>
+            </li>
+    </ul>
+
+    <div id="addCourse" class="container" style="background-color:lightblue" align="left">
+                   
+                <h5>Add a subject</h5>
+                <div class="form-group">
+                        <label>Course Name:</label>
+                        <input v-model="courseName" type="text" class="form-control" placeholder="Course Name">
+                </div>
+                   
+                    <button v-on:click="addCourse" class="btn btn-default">ADD</button>
+                 <h6>{{msg}}</h6>   
+    </div>
+            
+
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+        crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+        crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.5.16/dist/vue.js"></script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <script>
+        let app = new Vue({
+            el: '#addCourse',
+            data: {
+                
+                courses: [],
+                courseName: '',
+                msg:''
+            },
+            methods: {
+               
+                addCourse: function() {
+                    axios.post('http://localhost:3000/courses', {
+                        name: this.courseName
+
+                    })
+                        .then(function (response) {
+                            console.log(response);
+                            if (response.status !== 200) {
+                                alert("Not success!")
+                            }else{
+                                msg="course added sucessfully.."
+                            }
+                            app.getCourses()
+                        })
+                        .catch(function (error) {
+                            console.log(error);
+                        });
+                    this.courseName = '';
+                },
+                getCourses: function() {
+                    axios.get('http://localhost:3000/courses')
+                         .then(responce => {
+                             this.courses = responce.data
+                         })
+                         .catch(err => {
+                             console.log('could not get courses')
+                         })
+                }
+            }
+
+        })
+        app.getCourses();
+    </script>
+    
+</body>
+
+</html>

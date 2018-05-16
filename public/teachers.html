@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.0/umd/popper.min.js" integrity="sha384-cs/chFZiN24E4KMATLdqdvsezGxaGsi4hLGOzlXwp5UZB1LY//20VyM2taTB4QvJ"
+        crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css" integrity="sha384-9gVQ4dYFwwWSjIDZnLEWnxCjeSWFphJiwGPXr1jddIhOegiu1FwO5qRGvFXOdJZ4"
+        crossorigin="anonymous">
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js" integrity="sha384-uefMccjFJAIv6A+rW+L4AHf99KvxDjWSu1z9VI8SKNVmz4sk7buKt/6v9KI65qnm"
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <style>
+            ul {
+                list-style-type: none;
+                margin: 0;
+                padding: 0;
+                overflow: hidden;
+                background-color: #333;
+            }
+    
+            li {
+                float: left;
+            }
+    
+            li a {
+                display: block;
+                color: white;
+                text-align: center;
+                padding: 14px 16px;
+                text-decoration: none;
+            }
+    
+            li a:hover:not(.active) {
+                background-color: #111;
+            }
+    
+            .active {
+                background-color: #4CAF50;
+            }
+        </style>
+    
+
+</head>
+
+<body>
+    
+    <h1 align="center">Learning Management Solution</h1>
+    <ul>
+            <!-- class="active"
+                    <li><a  href="">Home</a></li> -->
+            <li>
+                <a href="courses.html">Courses</a>
+            </li>
+            <li>
+                <a href="students.html">Students</a>
+            </li>
+            <li>
+                <a href="subjects.html">Subjects</a>
+            </li>
+            <li>
+                    <a href="teachers.html">Teachers</a>
+                </li>
+                <li>
+                        <a href="batches.html">batches</a>
+                    </li>
+                    <li>
+                            <a href="lectures.html">Lectures</a>
+                        </li>
+        </ul>
+
+        <div id="teachers" class="container" style="background-color:lightblue" align="left">
+                <h5>Subjects </h5>
+                <div >
+                    <ul class="list-group">
+                        
+                        <li class="list-group-item" v-for="teacher in teachers"><b>{{teacher.id}}    </b>{{teacher.name}}</li>
+                    </ul>
+                </div>
+                <br>
+                <br>
+                <div style="background-color:rgb(156, 217, 186)">
+                   
+                <h5>Add a Teacher</h5>
+                <div class="form-group">
+                        <label>Teacher Name:</label>
+                        <input v-model="teacherName" type="text" class="form-control" placeholder="Teacher Name">
+                    </div>
+                    <div class="form-group">
+                        <label>Subject:</label>
+                        <select v-model="subjectId">
+                            <option v-for="subject in subjects" :value="subject.id">
+                                {{ subject.name }}
+                            </option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                            <label>Course:</label>
+                            <select v-model="courseId">
+                                <option v-for="course in courses" :value="course.id">
+                                    {{ course.name }}
+                                </option>
+                            </select>
+                        </div>
+                    <button v-on:click="addTeacher" class="btn btn-default">ADD</button>
+                    </div>
+            </div>
+
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+        crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+        crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.5.16/dist/vue.js"></script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <script>
+        let app = new Vue({
+            el: '#teachers',
+            data: {
+                teachers: [],
+                subjectId:'',
+                courseId:'',
+                subjects:[],
+                courses:[],
+                teacherName:''
+            },
+            methods: {
+                getTeachers: function() {
+                    axios.get('http://localhost:3000/teachers')
+                         .then(responce => {
+                             this.teachers = responce.data
+                         })
+                         .catch(err => {
+                             console.log('could not get teachers')
+                         })
+                },
+                getSubjects: function() {
+                    axios.get('http://localhost:3000/subjects')
+                         .then(responce => {
+                             this.subjects = responce.data
+                         })
+                         .catch(err => {
+                             console.log('could not get subjects')
+                         })
+                },
+                getCourses: function() {
+                    axios.get('http://localhost:3000/courses')
+                         .then(responce => {
+                             this.courses = responce.data
+                         })
+                         .catch(err => {
+                             console.log('could not get subjects')
+                         })
+                },
+                addTeacher: function() {
+                    axios.post('http://localhost:3000/teachers', {
+                        name: this.teacherName,
+                        subjectId:this.subjectId,
+                       
+                        courseId: this.courseId
+                    })
+                        .then(function (response) {
+                            console.log(response);
+                            if (response.status !== 200) {
+                                alert("Not success!")
+                            }
+                            app.getTeachers()
+                        })
+                        .catch(function (error) {
+                            console.log(error);
+                        });
+                    this.teacherName = '';
+                }
+            }
+
+        })
+        app.getTeachers();
+        app.getCourses();
+        app.getSubjects();
+    </script>
+    
+</body>
+
+</html>
